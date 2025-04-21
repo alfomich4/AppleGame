@@ -4,6 +4,7 @@
 #include "Apple.h"
 #include "Rock.h"
 #include "Math.h"
+#include "Record.h"
 #include <cassert>
 #include <sstream>
 
@@ -43,12 +44,17 @@ namespace ApplesGames
         game.inputHintText.setCharacterSize(20);
         game.inputHintText.setFillColor(sf::Color::Yellow);
         game.inputHintText.setPosition(200, 10);
-        game.inputHintText.setString("Use arrow keys to move, ESC to exit");
+        game.inputHintText.setString("Use arrow keys to move,press space to restart, ESC to exit");
 
         game.gameOverText.setFont(font);
         game.gameOverText.setCharacterSize(70);
         game.gameOverText.setFillColor(sf::Color::Cyan);
         game.gameOverText.setPosition(200, 200);
+
+        game.leadertable.setFont(font);
+        game.leadertable.setCharacterSize(24);
+        game.leadertable.setFillColor(sf::Color::White);
+        
         
        
 
@@ -155,16 +161,30 @@ namespace ApplesGames
                 }
             }
         }
-        else
+        //else
+        //{
+        //    game.gameFinishTime += deltaTime;
+        //    if (game.gameFinishTime > PAUSE_LENGTH)
+        //    {
+        //         /*При рестарте сбрасываем флаг начала игры*/
+        //        game.isGameStarted = false;
+        //        InitGame(player, apples, rocks, game, *game.scoreText.getFont());
+        //    }
+        //}
+
+        if (game.isGameFinished && (game.gameMode & MODE_INFINITE_APPLES))
+        
         {
-            game.gameFinishTime += deltaTime;
-            if (game.gameFinishTime > PAUSE_LENGTH)
+            for (auto& rec :leaderboard)
             {
-                // При рестарте сбрасываем флаг начала игры
-                game.isGameStarted = false;
-                InitGame(player, apples, rocks, game, *game.scoreText.getFont());
+                if (rec.name == "Player" && game.numEatenApples > rec.score)
+                {
+                    rec.score = game.numEatenApples;
+                }
             }
+           SortLeaderboard(leaderboard);
         }
+        
     }
 
     void RenderGame(sf::RenderWindow& window, Game& game, Player& player, Apple& apples, Rock& rocks)
@@ -199,12 +219,32 @@ namespace ApplesGames
                 targetApples = NUM_APPLES;
             }
 
-            if ((!(game.gameMode & MODE_INFINITE_APPLES) && game.numEatenApples >= targetApples))
+            if ((!(game.gameMode & MODE_INFINITE_APPLES) && game.numEatenApples >= targetApples)) 
+            {
                 game.gameOverText.setString("YOU WIN!");
+            }
             else
+            {
                 game.gameOverText.setString("GAME OVER");
+            }
+           
 
             window.draw(game.gameOverText);
+            float y = 300;// позицию по вертикали
+            int index = 1;// место игрока в списке
+            if (game.isGameFinished && (game.gameMode & MODE_INFINITE_APPLES))
+            {
+                for (const auto& rec : leaderboard)
+                {
+                   
+                    game.leadertable.setPosition(200, y);
+                    game.leadertable.setString(std::to_string(index) + ". " + rec.name + " - " + std::to_string(rec.score));
+                    window.draw(game.leadertable);
+
+                    y += 30;
+                    ++index;
+                }
+            }
         }
 
         player.playerSprite.setPosition(player.playerPosition.x, player.playerPosition.y);

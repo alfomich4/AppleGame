@@ -3,6 +3,7 @@
 #include <SFML/Audio.hpp>
 #include "Constants.h"
 
+
 namespace ApplesGames
 {
     struct Player;
@@ -23,6 +24,7 @@ namespace ApplesGames
         sf::Text inputHintText;
         sf::Text gameOverText;
         sf::Text modeSelectText;
+        sf::Text leadertable;
 
         sf::Texture playerTexture;
         sf::Texture appleTexture;

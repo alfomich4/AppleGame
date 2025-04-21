@@ -21,7 +21,9 @@ namespace ApplesGames
         sf::Sprite playerSprite;
         sf::Vector2f baseScale;
     };
-
+    
+    
+    
     void InitPlayer(Player& player, const Game& game);
     void HandleInput(Game& game, Player& player);
     void RotateAccordingToDirection(Player& player);

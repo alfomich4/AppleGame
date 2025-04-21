@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Apple.h"
 #include "Rock.h"
+#include "Record.h"
 
 using namespace ApplesGames;
 
@@ -42,6 +43,10 @@ int main()
                 (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
             {
                 window.close();
+            }
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+            {
+                InitGame(player, apples, rocks, game, font);
             }
 
             HandleModeSelection(game, event);
